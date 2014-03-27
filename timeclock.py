@@ -67,9 +67,9 @@ class MainScreen(FloatLayout):
         self.daily.hours.text = self.calc_daily(res['stats'])
 
         for entry, stat in zip(self.stats.entries.children[::-1], res['stats']):
-            entry.time_in.text = self.to_datetime(stat['in']).strftime('%H:%m')
+            entry.time_in.text = self.to_datetime(stat['in']).strftime('%H:%M')
             if stat['out']:
-                entry.time_out.text = self.to_datetime(stat['out']).strftime('%H:%m')
+                entry.time_out.text = self.to_datetime(stat['out']).strftime('%H:%M')
 
 
 class TimeClockApp(App):       
