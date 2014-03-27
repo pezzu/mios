@@ -16,11 +16,12 @@
     ],
     "repository": {
         "type": "hg",
-        "url": ""
+        "url": "https://bitbucket.org/pesu/mios"
     },
     "dependencies": {
         "express" : "*",
         "oracle"  : "*",
-        "q"       : "*"
+        "q"       : "*",
+        "zombie"  : "*"
     }
 }

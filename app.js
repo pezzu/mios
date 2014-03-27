@@ -1,6 +1,7 @@
 var express = require('express');
 var oracle = require('oracle');
 var q = require('q');
+var browser = require('zombie');
 
 var tns = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=iepe100.isd.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=spaten_iepe100.isd)))';
 var connData = {'tns': tns, 'user': 'epeprod_ro', 'password': 'epeprod_ro'};
@@ -51,12 +52,16 @@ app.get('/api/timeclock/:user', function(req, res) {
 });
 
 
-app.put('/api/timeclock', function(req, res) {
+app.put('/api/timeclock/do', function(req, res) {
     var user = req.query.user;
     var pass = decodeURIComponent(req.query.password);
 
     console.log('user = ' + user + '\npassword = ' + pass);
-    res.end();
+    result = { user: user,
+               clockedIn: true,
+               srv_msg: 'This is response from EPE server'
+             };
+    res.end(JSON.stringify(result));
 });
 
 app.listen(8080);

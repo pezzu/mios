@@ -2,11 +2,11 @@ import json
 import httplib2
 import urllib
 
-API_URL = 'http://localhost:8080/api'
+import settings
 
 def api(http_method, api_method, **params):
 
-    url = API_URL + '/' + api_method + '/'
+    url = settings.server_url + '/' + api_method + '/'
 
     if params:
         url += '?' + '&'.join([key + '=' + urllib.quote(value, '') for key,value in params.iteritems()])
@@ -21,13 +21,13 @@ def api(http_method, api_method, **params):
         raise Exception(error)
 
 def get_info(user):
-    return api('GET', 'timeclock/' + user)
+    return api('GET', user)
 
-def set_info(user, password):
-    return api('PUT', 'timeclock', user=user, password=password)
+def loginout(user, password):
+    return api('PUT', 'do', user=user, password=password)
 
 
 if __name__ == '__main__':
 
     get_info('pesu')
-    set_info('pesu', '123')
+    loginout('pesu', '123')

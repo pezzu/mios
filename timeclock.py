@@ -10,6 +10,7 @@ import datetime
 import tcservice
 import settings
 
+
 class StatEntry(FloatLayout):
     pass
 
@@ -33,13 +34,11 @@ class MainScreen(FloatLayout):
     daily = ObjectProperty(None)
     stats = ObjectProperty(None)
 
-
     def to_datetime(self, isodate):        
         return datetime.datetime.strptime(isodate,'%Y-%m-%dT%H:%M:%S.%fZ') if isodate else None;
 
 
     def calc_daily(self, stats):
-
         stats_dt = [{'in': self.to_datetime(stat['in']), 'out': self.to_datetime(stat['out'])} for stat in stats]
         if stats_dt[-1] is None:
             stats_dt[-1] = datetime.datetime.today()
@@ -51,8 +50,8 @@ class MainScreen(FloatLayout):
 
         return '%2d:%02d'%(hours, minutes)
 
-    def update(self):
 
+    def update(self):
         res = tcservice.get_info(settings.user)
 
         self.name.text = res['user']
@@ -72,10 +71,15 @@ class MainScreen(FloatLayout):
                 entry.time_out.text = self.to_datetime(stat['out']).strftime('%H:%M')
 
 
-class TimeClockApp(App):       
+    def do_action(self):
+        res = tcservice.loginout(settings.user, settings.password)
+
+
+class TimeClockApp(App):
     def build(self):
         screen = MainScreen()
         screen.update()
         return screen 
+
 
 TimeClockApp().run()
