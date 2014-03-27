@@ -1,0 +1,26 @@
+{
+    "name": "ios-proxy",
+    "version": "0.0.1",
+    "private": true,
+    "author": 
+        {
+            "name": "Peter Sukhenko",
+            "email": "pesu@isd.dp.ua"
+        },
+    "description": "Proxy server for Timeclock system",
+    "contributors": [
+        {
+            "name": "Peter Sukhenko",
+            "email": "pesu@isd.dp.ua"
+        }
+    ],
+    "repository": {
+        "type": "hg",
+        "url": ""
+    },
+    "dependencies": {
+        "express" : "*",
+        "oracle"  : "*",
+        "q"       : "*"
+    }
+}

@@ -1,0 +1,81 @@
+#:kivy 1.4
+
+<StatEntry>:    
+    time_in: time_in
+    time_out: time_out
+    BoxLayout:
+        pos: root.pos
+        orientation: 'horizontal'
+        Label:
+            id: time_in
+        Label:
+            id: time_out
+
+
+<StatisticsHeader>:
+    BoxLayout:
+        pos: root.pos
+        orientation: 'horizontal'
+        Label:
+            text: 'In'
+        Label:
+            text: 'Out'
+
+
+<Statistics>:
+    entries: entries
+    BoxLayout:
+        id: entries
+        pos: root.pos
+        orientation: 'vertical'
+        StatEntry:
+            size_hint: 1, .12
+        StatEntry:
+            size_hint: 1, .12
+        StatEntry:
+            size_hint: 1, .12
+        StatEntry:
+            size_hint: 1, .12
+        StatEntry:
+            size_hint: 1, .12
+        StatEntry:
+            size_hint: 1, .12
+
+
+<DailyStat>:
+    hours: hours
+    BoxLayout:
+        pos: root.pos
+        orientation: 'horizontal'
+        Label:
+            text: 'Daily hours:'
+        Label:
+            id: hours
+
+
+<MainScreen>:
+    name: name
+    status: status
+    dobtn: dobtn
+    daily: daily
+    stats: stats
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            size_hint: 1, .13
+            id: name
+        Label:
+            size_hint: 1, .13
+            id: status
+        DailyStat:
+            size_hint: 1, .13
+            id: daily
+        Button:
+            size_hint: 0.60, .16
+            pos_hint: {'center_x': 0.5, 'center_y': 1}
+            id: dobtn
+            text: 'Clock IT'
+        StatisticsHeader:
+            size_hint: 1, .10
+        Statistics:
+            id: stats
