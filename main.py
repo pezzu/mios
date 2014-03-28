@@ -87,10 +87,13 @@ class MainScreen(FloatLayout):
 
 
 class TimeClockApp(App):
+    def on_start(self):
+        self.screen.update()
+
     def build(self):
-        screen = MainScreen()
-        screen.update()
-        return screen 
+        self.screen = MainScreen()
+        # screen.update()
+        return self.screen 
 
 
 TimeClockApp().run()
