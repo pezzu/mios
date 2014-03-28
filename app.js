@@ -1,7 +1,8 @@
 var express = require('express');
 var oracle = require('oracle');
 var q = require('q');
-var browser = require('zombie');
+var request = require('request');
+var qs = require('querystring');
 
 var tns = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=iepe100.isd.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=spaten_iepe100.isd)))';
 var connData = {'tns': tns, 'user': 'epeprod_ro', 'password': 'epeprod_ro'};
@@ -56,11 +57,40 @@ app.put('/api/timeclock/do', function(req, res) {
     var user = req.query.user;
     var pass = decodeURIComponent(req.query.password);
 
-    console.log('user = ' + user + '\npassword = ' + pass);
-    result = { user: user,
-               clockedIn: true,
-               srv_msg: 'This is response from EPE server'
-             };
+    var params = {
+        screenWidth: 1680,
+        screenHeight: 1050,
+        scrollWidth: 0,
+        bro: 'CR',
+        inFrame: false,
+        XDPI: 96,
+        http: timeClock.do,
+        loginName: '',
+        password: ''
+    };
+
+    params.loginName = user;
+    params.password = pass;
+
+    var url = 'http://epe.isd.dp.ua/epe/login.do';
+    url += '?' + qs.stringify(params);
+
+    result = {
+        user: user,
+        status: false,
+        msg: ''
+    };
+
+    request({url: url, method: 'post'}, function (err, res, body) {
+        if(res.statsCode == 200) {
+            result.status = true;
+        }
+        else {
+            result.status = false;
+            result.msg = err;    
+        }
+    });
+
     res.end(JSON.stringify(result));
 });
 

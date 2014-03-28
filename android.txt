@@ -1,0 +1,3 @@
+title=TimeClock client
+author=pesu
+orientation=portrait

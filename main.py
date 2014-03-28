@@ -40,9 +40,9 @@ class MainScreen(FloatLayout):
 
     def calc_daily(self, stats):
         stats_dt = [{'in': self.to_datetime(stat['in']), 'out': self.to_datetime(stat['out'])} for stat in stats]
-        if stats_dt[-1] is None:
-            stats_dt[-1] = datetime.datetime.today()
-        
+        if stats_dt[-1]['out'] is None:
+            stats_dt[-1]['out'] = datetime.datetime.today()
+            
         daily = reduce(lambda x,y: x+y, [sdt['out'] - sdt['in'] for sdt in stats_dt])
 
         hours = daily.seconds // 3600
