@@ -64,7 +64,7 @@ app.put('/api/timeclock/do', function(req, res) {
         bro: 'CR',
         inFrame: false,
         XDPI: 96,
-        http: timeClock.do,
+        http: 'timeClock.do',
         loginName: '',
         password: ''
     };
