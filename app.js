@@ -2,7 +2,6 @@ var express = require('express');
 var oracle = require('oracle');
 var q = require('q');
 var request = require('request');
-var qs = require('querystring');
 
 var tns = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=iepe100.isd.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=spaten_iepe100.isd)))';
 var connData = {'tns': tns, 'user': 'epeprod_ro', 'password': 'epeprod_ro'};
@@ -64,16 +63,24 @@ app.put('/api/timeclock/do', function(req, res) {
         bro: 'CR',
         inFrame: false,
         XDPI: 96,
-        http: 'timeClock.do',
-        loginName: '',
-        password: ''
+        loginName: user,
+        password: pass,
+        newPassword: '',
+        confirmPassword: '',
+        authMethod: '',
+        clearID: '',
+        http: 'timeClock.do'
     };
 
-    params.loginName = user;
-    params.password = pass;
-
     var url = 'http://epe.isd.dp.ua/epe/login.do';
-    url += '?' + qs.stringify(params);
+
+    var opts = {
+        url: url, 
+        method: 'POST', 
+        followAllRedirects: true, 
+        jar: true, 
+        form: params
+    };
 
     result = {
         user: user,
@@ -81,8 +88,8 @@ app.put('/api/timeclock/do', function(req, res) {
         msg: ''
     };
 
-    request({url: url, method: 'post'}, function (err, res, body) {
-        if(res.statsCode == 200) {
+    request(opts, function (err, res, body) {
+        if(res.statusCode == 200) {            
             result.status = true;
         }
         else {

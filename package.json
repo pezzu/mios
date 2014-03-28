@@ -22,7 +22,6 @@
         "express" : "*",
         "oracle"  : "*",
         "q"       : "*",
-        "request" : "*",
-        "qs"      : "*"
+        "request" : "*"
     }
 }
