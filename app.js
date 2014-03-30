@@ -43,10 +43,11 @@ app.get('/api/timeclock/:user', function(req, res) {
     })
     .fail(function(error) {
         console.log("[ERROR]: " + error);
-        response.status(404);
-        error.status = 404;
-        error.user = user;
-        response.end(JSON.stringify(error));
+        res.status(404);
+        result = {
+            error: error.toString(),
+            user: req.params.user };
+        res.end(JSON.stringify(result));
     })
     .done();
 });
