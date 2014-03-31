@@ -14,18 +14,17 @@ AND LO.ILOGISDIOSLOGIN = (:1) \
 AND To_Date(TC.IOSTCCREATTIME) = To_Date(SYSDATE) \
 ORDER BY TC.IOSTCCREATTIME ASC";
 
-var app = express();
 
-app.get('/api/timeclock/:user', function(req, res) {
+var tcStatus = function(user) {
 
-    q.nfcall(oracle.connect, connData)
+    return q.nfcall(oracle.connect, connData)
     .then(function(connection) {
         return q
-            .ninvoke(connection, "execute", sql, [req.params.user])
+            .ninvoke(connection, "execute", sql, [user])
             .then(function(data) {
                 connection.close();
 
-                var result = { user: req.params.user,
+                var result = { user: user,
                                clockedIn: false,
                                stats: [] };
 
@@ -36,26 +35,13 @@ app.get('/api/timeclock/:user', function(req, res) {
                         result.stats.push({'in': entry.IOSTCIN, 'out': entry.IOSTCOUT});
                     });
                 }
-
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(result));
+                return result;
             });
     })
-    .fail(function(error) {
-        console.log("[ERROR]: " + error);
-        res.status(404);
-        result = {
-            error: error.toString(),
-            user: req.params.user };
-        res.end(JSON.stringify(result));
-    })
-    .done();
-});
+};
 
 
-app.put('/api/timeclock/do', function(req, res) {
-    var user = req.query.user;
-    var pass = decodeURIComponent(req.query.password);
+var triggerEpe = function(user, pass) {
 
     var params = {
         screenWidth: 1680,
@@ -83,24 +69,86 @@ app.put('/api/timeclock/do', function(req, res) {
         form: params
     };
 
-    result = {
-        user: user,
-        status: false,
-        msg: ''
-    };
-
-    request(opts, function (err, res, body) {
-        if(res.statusCode == 200) {            
-            result.status = true;
+    return q.nfcall(request, opts)
+    .then(function(res, body) {
+        status = false;
+        if(res.statusCode == 200) {
+            status = true;
         }
         else {
-            result.status = false;
-            result.msg = err;    
+            status = false;
         }
+        return status;
     });
+}
 
-    res.end(JSON.stringify(result));
+
+var clockInOut = function(req, res, requiredStatus) {
+    var user = req.query.user;
+    var pass = decodeURIComponent(req.query.password);
+
+    q.fcall(tcStatus, user)
+    .then(function(result) {
+        if(!requiredStatus(result.clockedIn)) {
+            return q.fcall(triggerEpe, user, pass)
+            .then(function() {
+                return tcStatus(user);
+            });
+        }
+        else {
+            return result;
+        }
+    })
+    .then(function(result) {
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(result));
+    })
+    .fail(function(error) {
+        console.error("[ERROR]: " + error);
+        res.status(404);
+        result = {
+            error: error.toString(),
+            user: req.params.user };
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(result));
+    })
+    .done();
+}
+
+
+var app = express();
+
+app.get('/api/timeclock/:user', function(req, res) {
+
+    q.fcall(tcStatus, req.params.user)
+    .then(function(result) {
+
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(result));
+
+    })
+    .fail(function(error) {
+        console.error("[ERROR]: " + error);
+        res.status(404);
+        result = {
+            error: error.toString(),
+            user: req.params.user };
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(result));
+    })
+    .done();
 });
+
+
+app.post('/api/timeclock/in', function(req, res) {
+    return clockInOut(req, res, function(status) { return status == true; } );
+});
+
+
+app.post('/api/timeclock/out', function(req, res) {
+    return clockInOut(req, res, function(status) { return status == false; } );
+});
+
 
 app.listen(8080);
 console.log('Server is running at http://localhost:8080');
