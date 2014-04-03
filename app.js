@@ -99,7 +99,11 @@ var clockInOut = function(req, res, requiredStatus) {
             return result;
         }
     })
-    .then(function(result) {
+    .then(function(data) {
+        result = {
+           user: user,
+           clockedIn: data.clockedIn
+        };
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(result));
     })
@@ -108,7 +112,7 @@ var clockInOut = function(req, res, requiredStatus) {
         res.status(404);
         result = {
             error: error.toString(),
-            user: req.params.user };
+            user: user };
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(result));
     })

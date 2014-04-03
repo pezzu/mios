@@ -1,6 +1,6 @@
 import kivy
 from kivy.app import App
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, BooleanProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -30,10 +30,10 @@ class MainScreen(FloatLayout):
     dobtn = ObjectProperty(None)
     daily = ObjectProperty(None)
     stats = ObjectProperty(None)
+    clocked = BooleanProperty(None)
 
     def to_datetime(self, isodate):        
         return datetime.datetime.strptime(isodate,'%Y-%m-%dT%H:%M:%S.%fZ') if isodate else None;
-
 
     def calc_daily(self, stats):
         stats_dt = [{'in': self.to_datetime(stat['in']), 'out': self.to_datetime(stat['out'])} for stat in stats]
@@ -54,8 +54,9 @@ class MainScreen(FloatLayout):
             res = tcservice.get_info(settings.user)
 
             self.name.text = res['user']
+            self.clocked = res['clockedIn']
 
-            if res['clockedIn']:
+            if self.clocked:
                 self.status.text = 'Clocked In' 
                 self.dobtn.text = 'Clock Out'
             else:
@@ -75,7 +76,7 @@ class MainScreen(FloatLayout):
 
     def do_action(self):
         try:
-            res = tcservice.loginout(settings.user, settings.password)
+            res = tcservice.logout(settings.user, settings.password) if self.clocked else tcservice.login(settings.user, settings.password) 
             self.update()
         except Exception as e:
             self.display_error(e)
@@ -92,7 +93,6 @@ class TimeClockApp(App):
 
     def build(self):
         self.screen = MainScreen()
-        # screen.update()
         return self.screen 
 
 

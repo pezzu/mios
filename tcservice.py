@@ -23,11 +23,14 @@ def api(http_method, api_method, **params):
 def get_info(user):
     return api('GET', user)
 
-def loginout(user, password):
-    return api('PUT', 'do', user=user, password=password)
+def login(user, password):
+    return api('POST', 'in', user=user, password=password)
+
+def logout(user, password):
+    return api('POST', 'out', user=user, password=password)
 
 
 if __name__ == '__main__':
 
     get_info('pesu')
-    loginout('pesu', '123')
+    login('pesu', '123')
