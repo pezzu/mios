@@ -29,17 +29,17 @@
         pos: root.pos
         orientation: 'vertical'
         StatEntry:
-            size_hint: 1, .12
+            size_hint: 1, .10
         StatEntry:
-            size_hint: 1, .12
+            size_hint: 1, .10
         StatEntry:
-            size_hint: 1, .12
+            size_hint: 1, .10
         StatEntry:
-            size_hint: 1, .12
+            size_hint: 1, .10
         StatEntry:
-            size_hint: 1, .12
+            size_hint: 1, .10
         StatEntry:
-            size_hint: 1, .12
+            size_hint: 1, .10
 
 
 <DailyStat>:
@@ -64,19 +64,20 @@
         Label:
             size_hint: 1, .13
             id: name
+            font_size: '32sp'
         Label:
             size_hint: 1, .13
             id: status
         DailyStat:
-            size_hint: 1, .13
+            size_hint: 1, .15
             id: daily
         Button:
-            size_hint: 0.60, .16
+            size_hint: 0.60, .15
             pos_hint: {'center_x': 0.5, 'center_y': 1}
             id: dobtn
             text: 'reading'
             on_release: root.do_action()
         StatisticsHeader:
-            size_hint: 1, .10
+            size_hint: 1, .20
         Statistics:
             id: stats
