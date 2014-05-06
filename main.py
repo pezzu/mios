@@ -36,14 +36,19 @@ class MainScreen(FloatLayout):
         return datetime.datetime.strptime(isodate,'%Y-%m-%dT%H:%M:%S.%fZ') if isodate else None;
 
     def calc_daily(self, stats):
-        stats_dt = [{'in': self.to_datetime(stat['in']), 'out': self.to_datetime(stat['out'])} for stat in stats]
-        if stats_dt[-1]['out'] is None:
-            stats_dt[-1]['out'] = datetime.datetime.today()
-            
-        daily = reduce(lambda x,y: x+y, [sdt['out'] - sdt['in'] for sdt in stats_dt])
 
-        hours = daily.seconds // 3600
-        minutes = (daily.seconds - hours*3600) // 60
+        hours = 0
+        minutes = 0
+                
+        if stats:
+            stats_dt = [{'in': self.to_datetime(stat['in']), 'out': self.to_datetime(stat['out'])} for stat in stats]
+            if stats_dt[-1]['out'] is None:
+                stats_dt[-1]['out'] = datetime.datetime.today()
+                
+            daily = reduce(lambda x,y: x+y, [sdt['out'] - sdt['in'] for sdt in stats_dt])
+
+            hours = daily.seconds // 3600
+            minutes = (daily.seconds - hours*3600) // 60
 
         return '%2d:%02d'%(hours, minutes)
 
