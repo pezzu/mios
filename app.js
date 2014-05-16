@@ -199,22 +199,24 @@ app.post('/api/timeclock/out', function(req, res) {
 
 function notify(user) {
 
-    var params = {
-        token: '98cd67e4dc4511e391ad00163e00103d',
-        emails: user.email,
-        message: 'User ' + user.name + ' logged in'
-    };
+    if(user.email != null) {
+        var params = {
+            token: '98cd67e4dc4511e391ad00163e00103d',
+            emails: user.email,
+            message: 'User ' + user.name + ' logged in'
+        };
 
-    var url = 'https://api.jeapie.com/v2/users/send/message.json';
+        var url = 'https://api.jeapie.com/v2/users/send/message.json';
 
-    var opts = {
-        url: url,
-        method: 'POST',
-        proxy: 'http://proxy.isd.dp.ua:8080',
-        form: params
-    };
+        var opts = {
+            url: url,
+            method: 'POST',
+            proxy: 'http://proxy.isd.dp.ua:8080',
+            form: params
+        };
 
-    request(opts);
+        request(opts);
+    }
 }
 
 function autoLogin(user) {
@@ -224,7 +226,7 @@ function autoLogin(user) {
             timeclockStatus(user.name)
             .then(function(tc) {
                 if((!tc.clockedIn) &&
-                   ((tc.stats[tc.stats.length-1].out == null) || (tc.stats[tc.stats.length-1].out <= ts.stats[ts.stats.length-1].in))) {
+                   ((tc.stats.length == 0) || (tc.stats[tc.stats.length-1].out == null) || (tc.stats[tc.stats.length-1].out <= ts.stats[ts.stats.length-1].in))) {
                         triggerEpe(user.name, user.password)
                         .then(function(result) {
                             if(result) {
