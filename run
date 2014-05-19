@@ -1,0 +1,3 @@
+export LD_LIBRARY_PATH=/oracle/instantclient_12_1:$LD_LIBRARY_PATH
+                
+nohup node server/app.js > board.log 2>&1 &

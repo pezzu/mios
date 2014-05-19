@@ -1,0 +1,10 @@
+export OCI_LIB_DIR=/oracle/instantclient_12_1
+export OCI_INCLUDE_DIR=/oracle/instantclient_12_1/sdk/include
+export OCI_VERSION=12
+
+export HTTP_PROXY=http://proxy.isd.dp.ua:8080
+export HTTP_PROXYS=http://proxy.isd.dp.ua:8080
+
+export PYTHON=/usr/bin/python26
+
+npm instal

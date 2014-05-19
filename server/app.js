@@ -246,5 +246,5 @@ var onTimeTrigger = function() {
 
 setInterval(onTimeTrigger, 1*60*1000); // each 1 minute
 
-app.listen(8080);
-console.log('Server is running at http://localhost:8080');
+app.listen(8000);
+console.log('Server is running at http://localhost:8000');
