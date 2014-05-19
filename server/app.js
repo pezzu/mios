@@ -2,6 +2,7 @@ var express = require('express');
 var oracle = require('oracle');
 var q = require('q');
 var request = require('request');
+var config = require('config');
 
 var tns = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=iepe100.isd.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=spaten_iepe100.isd)))';
 var connData = {'tns': tns, 'user': 'epeprod_ro', 'password': 'epeprod_ro'};
@@ -18,10 +19,6 @@ var fortnetSql = "\
 SELECT TS.NN, TS.ACTION, TS.ACT_DATE_TIME \
 FROM TABLE(isd_ios.getTimeByDate((SELECT LO.ILOGIEMPAA FROM EPEPROD.ECISDLOGIN LO WHERE LO.ILOGISDIOSLOGIN = (:1)))) TS \
 ORDER BY TS.NN DESC";
-
-var autoUsers = [
-    {name: 'pesu', password: '2me', email: 'peter.sukhenko@gmail.com'}
-];
 
 var timeclockStatus = function(user) {
 
@@ -241,10 +238,10 @@ function autoLogin(user) {
 }
 
 var onTimeTrigger = function() {
-    autoUsers.forEach(autoLogin);
+    config.autoUsers.forEach(autoLogin);
 }
 
-setInterval(onTimeTrigger, 1*60*1000); // each 1 minute
+setInterval(onTimeTrigger, config.autoCheckInterval); // each 1 minute
 
-app.listen(8000);
-console.log('Server is running at http://localhost:8000');
+app.listen(config.appPort);
+console.log('Server is running at port ' + config.appPort);
