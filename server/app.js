@@ -4,7 +4,7 @@ var request = require('request');
 
 var config = require('./config.js');
 var epe = require('./epe.js');
-
+var jeapie = require('./jeapie.js');
 
 
 var clockInOut = function(req, res, requiredStatus) {
@@ -77,28 +77,6 @@ app.post('/api/timeclock/out', function(req, res) {
     return clockInOut(req, res, function(status) { return status == false; } );
 });
 
-function notify(user) {
-
-    if(user.email != null) {
-        var params = {
-            token: '98cd67e4dc4511e391ad00163e00103d',
-            emails: user.email,
-            message: 'User ' + user.name + ' logged in'
-        };
-
-        var url = 'https://api.jeapie.com/v2/users/send/message.json';
-
-        var opts = {
-            url: url,
-            method: 'POST',
-            proxy: 'http://proxy.isd.dp.ua:8080',
-            form: params
-        };
-
-        request(opts);
-    }
-}
-
 function autoLogin(user) {
     return epe.turnstileStatus(user.name)
     .then(function(ts) {
@@ -110,7 +88,7 @@ function autoLogin(user) {
                         epe.triggerTimeclock(user.name, user.password)
                         .then(function(result) {
                             if(result) {
-                                notify(user);
+                                jeapie.notify(user.email, 'User ' + user.name + ' clocked in');
                             }
                         })
                 }
