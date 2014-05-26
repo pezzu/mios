@@ -1,6 +1,7 @@
 var oracle = require('oracle');
 var q = require('q');
 var request = require('request');
+var trace = require('./trace.js');
 
 var tns = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=iepe100.isd.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME=spaten_iepe100.isd)))';
 var connData = {'tns': tns, 'user': 'epeprod_ro', 'password': 'epeprod_ro'};

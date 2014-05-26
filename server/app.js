@@ -5,6 +5,7 @@ var request = require('request');
 var config = require('./config.js');
 var epe = require('./epe.js');
 var jeapie = require('./jeapie.js');
+var trace = require('./trace.js');
 
 
 var clockInOut = function(req, res, requiredStatus) {
@@ -102,7 +103,7 @@ var onTimeTrigger = function() {
     config.autoUsers.forEach(autoLogin);
 }
 
-setInterval(onTimeTrigger, config.autoCheckInterval); // each 1 minute
+setInterval(onTimeTrigger, config.autoCheckInterval);
 
 app.listen(config.appPort);
-console.log('Server is running at port ' + config.appPort);
+trace.log('Server is running at port ' + config.appPort);
