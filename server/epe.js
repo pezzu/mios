@@ -105,7 +105,7 @@ module.exports.triggerTimeclock = function(user, pass) {
         url: url,
         method: 'POST',
         followAllRedirects: true,
-        jar: true,
+        jar: request.jar(),
         form: params
     };
 
