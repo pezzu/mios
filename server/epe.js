@@ -110,9 +110,9 @@ module.exports.triggerTimeclock = function(user, pass) {
     };
 
     return q.nfcall(request, opts)
-    .then(function(res, body) {
+    .then(function(res) {
         status = false;
-        if(res.statusCode == 200) {
+        if(res[0].statusCode == 200) {
             status = true;
         }
         else {
