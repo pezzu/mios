@@ -93,7 +93,7 @@ function autoLogin(user) {
                                     jeapie.notify(user.email, 'User ' + user.name + ' clocked in');
                                 }
                                 else {
-                                    jeapie.notify(user.email, 'Can\'t loggin user ' + user.name + '. EPE web page returned false');
+                                    jeapie.notify(user.email, 'Can\'t login user ' + user.name + '. EPE web page returned error');
                                 }
                             }
                         })
