@@ -88,8 +88,13 @@ function autoLogin(user) {
                    ((tc.stats.length == 0) || (tc.stats[tc.stats.length-1].out == null) || (tc.stats[tc.stats.length-1].out <= ts.stats[ts.stats.length-1].in))) {
                         epe.triggerTimeclock(user.name, user.password)
                         .then(function(result) {
-                            if((result) && (user.email)) {
-                                jeapie.notify(user.email, 'User ' + user.name + ' clocked in');
+                            if(user.email) {
+                                if(result) {
+                                    jeapie.notify(user.email, 'User ' + user.name + ' clocked in');
+                                }
+                                else {
+                                    jeapie.notify(user.email, 'Can\'t loggin user ' + user.name + '. EPE web page returned false');
+                                }
                             }
                         })
                 }
